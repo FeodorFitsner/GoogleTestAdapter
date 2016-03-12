@@ -27,6 +27,7 @@ namespace GoogleTestAdapter.Runners
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
+            ExecutionTracer.Trace("Staring runner " + this);
             List<Thread> threads;
             lock (this)
             {
@@ -40,6 +41,7 @@ namespace GoogleTestAdapter.Runners
             {
                 thread.Join();
             }
+            ExecutionTracer.Trace("Finished runner " + this);
         }
 
         public void Cancel()

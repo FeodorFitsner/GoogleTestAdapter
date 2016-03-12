@@ -24,7 +24,10 @@ namespace GoogleTestAdapter.TestAdapter
         private bool Canceled { get; set; } = false;
         private GoogleTestExecutor Executor { get; set; }
 
-        public TestExecutor() : this(null) { }
+        public TestExecutor() : this(null)
+        {
+            ExecutionTracer.Trace("TestExecutor instantiated");
+        }
 
         public TestExecutor(TestEnvironment testEnvironment)
         {
@@ -34,20 +37,26 @@ namespace GoogleTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            ExecutionTracer.Trace("RunTests(executables) called");
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                TestEnvironment.LogInfo("Starting execution");
+                TestEnvironment.LogInfo("Trace file: " + ExecutionTracer.TraceFile);
 
                 IList<Model.TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
-
+                ExecutionTracer.Trace("Identified all test cases");
                 ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
                 TestCaseFilter filter = new TestCaseFilter(runContext, allTraitNames, TestEnvironment);
                 List<TestCase> vsTestCases =
                     filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
                 allTestCasesInExecutables =
                     allTestCasesInExecutables.Where(tc => vsTestCases.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
+                ExecutionTracer.Trace("Filtered test cases");
 
                 DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
+                ExecutionTracer.Trace("Finished test execution");
+                ExecutionTracer.Flush();
             }
             catch (Exception e)
             {
@@ -57,20 +66,27 @@ namespace GoogleTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<TestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            ExecutionTracer.Trace("RunTests(testcases) called");
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                TestEnvironment.LogInfo("Starting execution");
+                TestEnvironment.LogInfo("Trace file: " + ExecutionTracer.TraceFile);
 
                 var vsTestCasesToRunAsArray = vsTestCasesToRun as TestCase[] ?? vsTestCasesToRun.ToArray();
                 ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
                 TestCaseFilter filter = new TestCaseFilter(runContext, allTraitNames, TestEnvironment);
                 vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
+                ExecutionTracer.Trace("Filtered test cases");
 
                 IEnumerable<Model.TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
+                ExecutionTracer.Trace("Identified all test cases");
 
                 IEnumerable<Model.TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+                ExecutionTracer.Trace("Finished test execution");
+                ExecutionTracer.Flush();
             }
             catch (Exception e)
             {

@@ -17,7 +17,10 @@ namespace GoogleTestAdapter.TestAdapter
         private TestEnvironment TestEnvironment { get; set; }
         private GoogleTestDiscoverer Discoverer { get; set; }
 
-        public TestDiscoverer() : this(null) { }
+        public TestDiscoverer() : this(null)
+        {
+            ExecutionTracer.Trace("TestDiscoverer instantiated");
+        }
 
         public TestDiscoverer(TestEnvironment testEnvironment)
         {
@@ -29,8 +32,9 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
+            ExecutionTracer.Trace("DiscoverTests called");
             ILogger loggerAdapter = new VsTestFrameworkLogger(logger);
-
+            ExecutionTracer.Trace("Starting discovery");
             if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options)) // check whether we have a mock
             {
                 var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
@@ -39,6 +43,8 @@ namespace GoogleTestAdapter.TestAdapter
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
                 Discoverer = new GoogleTestDiscoverer(TestEnvironment);
             }
+            ExecutionTracer.Trace("Initialized test environment");
+            TestEnvironment.LogInfo("Trace file: " + ExecutionTracer.TraceFile);
 
             try
             {
@@ -49,7 +55,8 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 TestEnvironment.LogError("Exception while discovering tests: " + e);
             }
-
+            ExecutionTracer.Trace("Finished test discovery");
+            ExecutionTracer.Flush();
         }
 
     }

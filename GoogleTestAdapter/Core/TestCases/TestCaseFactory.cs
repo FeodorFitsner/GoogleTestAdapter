@@ -22,7 +22,9 @@ namespace GoogleTestAdapter.TestCases
         public IList<TestCase> CreateTestCases()
         {
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(Executable);
+            ExecutionTracer.Trace("Parsed tests");
             List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, TestEnvironment.Options.PathExtension);
+            ExecutionTracer.Trace("Resolved test locations");
 
             return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
         }

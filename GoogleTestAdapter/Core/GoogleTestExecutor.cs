@@ -27,6 +27,7 @@ namespace GoogleTestAdapter
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             TestEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
+            ExecutionTracer.Trace("Computing test runner");
             lock (this)
             {
                 if (Canceled)

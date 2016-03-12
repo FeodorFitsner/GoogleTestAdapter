@@ -49,6 +49,7 @@
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
+    <Compile Include="Helpers\ExecutionTracer.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />

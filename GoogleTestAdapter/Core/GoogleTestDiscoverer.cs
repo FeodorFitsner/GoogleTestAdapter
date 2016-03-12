@@ -23,6 +23,7 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
+            ExecutionTracer.Trace("Identified test executables");
             foreach (string executable in googleTestExecutables)
             {
                 IList<TestCase> testCases = GetTestsFromExecutable(executable);
@@ -34,6 +35,7 @@ namespace GoogleTestAdapter
         {
             TestCaseFactory factory = new TestCaseFactory(executable, TestEnvironment);
             IList<TestCase> testCases = factory.CreateTestCases();
+            ExecutionTracer.Trace("Created tests for executable");
 
             TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
             foreach (TestCase testCase in testCases)

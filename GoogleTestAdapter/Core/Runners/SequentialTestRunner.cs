@@ -28,6 +28,7 @@ namespace GoogleTestAdapter.Runners
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
+            ExecutionTracer.Trace("Staring runner " + this);
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
@@ -48,6 +49,7 @@ namespace GoogleTestAdapter.Runners
                     isBeingDebugged,
                     debuggedLauncher);
             }
+            ExecutionTracer.Trace("Finished runner " + this);
         }
 
         public void Cancel()

@@ -31,6 +31,7 @@ namespace GoogleTestAdapter.Runners
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
+            ExecutionTracer.Trace("Staring runner " + this + "-" + ThreadId);
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
             try
@@ -64,6 +65,7 @@ namespace GoogleTestAdapter.Runners
             {
                 TestEnvironment.LogError("Exception while running tests: " + e);
             }
+            ExecutionTracer.Trace("Finished runner " + this + "-" + ThreadId);
         }
 
         public void Cancel()
