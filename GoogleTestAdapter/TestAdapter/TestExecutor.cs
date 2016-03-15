@@ -48,13 +48,13 @@ namespace GoogleTestAdapter.TestAdapter
                 ExecutionTracer.Trace("Identified all test cases");
                 ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
                 TestCaseFilter filter = new TestCaseFilter(runContext, allTraitNames, TestEnvironment);
-                List<TestCase> vsTestCases =
+                List<TestCase> vsTestCasesToRun =
                     filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
-                allTestCasesInExecutables =
-                    allTestCasesInExecutables.Where(tc => vsTestCases.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
+                IEnumerable<Model.TestCase> testCasesToRun =
+                    allTestCasesInExecutables.Where(tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
                 ExecutionTracer.Trace("Filtered test cases");
 
-                DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
+                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
                 ExecutionTracer.Trace("Finished test execution");
                 ExecutionTracer.Flush();
             }
