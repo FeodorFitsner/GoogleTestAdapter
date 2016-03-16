@@ -19,6 +19,8 @@ namespace GoogleTestAdapter.TestCases
         {
             var launcher = new ProcessLauncher(TestEnvironment, TestEnvironment.Options.PathExtension);
             List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
+            ExecutionTracer.Trace("Listed tests of executable " + executable);
+
             return ParseConsoleOutput(consoleOutput);
         }
 
@@ -38,7 +40,7 @@ namespace GoogleTestAdapter.TestCases
                     currentSuite = trimmedLine;
                 }
             }
-
+            ExecutionTracer.Trace("Created test case descriptors");
             return testCaseDescriptors;
         }
 
@@ -64,6 +66,7 @@ namespace GoogleTestAdapter.TestCases
 
             string fullyQualifiedName = $"{suite}.{name}";
             string displayName = GetDisplayName(fullyQualifiedName, typeParam, param);
+            ExecutionTracer.Trace("Created test case descriptor for test " + suiteLine + ", " + testCaseLine);
 
             return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName);
         }

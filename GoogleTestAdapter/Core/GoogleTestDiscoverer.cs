@@ -35,7 +35,7 @@ namespace GoogleTestAdapter
         {
             TestCaseFactory factory = new TestCaseFactory(executable, TestEnvironment);
             IList<TestCase> testCases = factory.CreateTestCases();
-            ExecutionTracer.Trace("Created tests for executable");
+            ExecutionTracer.Trace("Created tests for executable " + executable);
 
             TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
             foreach (TestCase testCase in testCases)
