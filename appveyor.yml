@@ -1,5 +1,5 @@
 version: 0.5.1.{build}
-os: Visual Studio 2015 - GCE
+#os: Visual Studio 2015 - GCE
 configuration: Release
 platform: Any CPU
 environment:
